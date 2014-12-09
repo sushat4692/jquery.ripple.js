@@ -1,4 +1,4 @@
-# jquery.inputfollow.js
+# jquery.ripple.js
 
 Ripple Animation like [Polymer](https://www.polymer-project.org/).
 
