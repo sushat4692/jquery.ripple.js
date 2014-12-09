@@ -1,5 +1,6 @@
 body {
-  font: 16px/1.6 sans-serif; }
+  font: 16px/1.6 sans-serif;
+  background: #eee; }
 
 .caution,
 .inputfollow-error {
@@ -17,6 +18,7 @@ body {
   margin: 0 1.4em 1.4em 0;
   float: left; }
   .link-wrap a {
+    background: #fff;
     border: 1px solid #ccc;
     display: block;
     width: 180px;
@@ -48,3 +50,24 @@ body {
   -ms-border-radius: 50%;
   -o-border-radius: 50%;
   border-radius: 50%; }
+
+.like-polymer a {
+  background: #fafafa;
+  color: #333;
+  text-decoration: none;
+  display: inline-block;
+  padding: 10px 10px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  -ms-border-radius: 3px;
+  -o-border-radius: 3px;
+  border-radius: 3px;
+  -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4); }
+  .like-polymer a:hover {
+    background: #fff;
+    -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.6); }
+  .like-polymer a:active {
+    -webkit-box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6); }
