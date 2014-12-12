@@ -126,18 +126,18 @@
             var height = this.$target.outerHeight();
             this.$rippleWrap.stop( true, false ).width( width ).height( height ).css( { 'opacity': 1, 'transition': 'none' } );
 
+            // サイズを指定（縦横の大きい値）
+            var circleRatio      = 2.8;
+            var size = Math.max( width, height );
+
             // マウスボタンの位置を取得
             // offsetX, offsetYがおかしいのでpageX, pageYから計算する
             var offsetX = e.pageX - this.$target.offset().left;
             var offsetY = e.pageY - this.$target.offset().top;
-            this.$rippleAnimate.css( { 'width': 0, 'height': 0, 'left': offsetX, 'top': offsetY, 'transition': 'none' } );
+            this.$rippleAnimate.css( { 'width': size, 'height': size, 'transform': 'scale3d( 0, 0, 1 )', 'left': offsetX-size/2, 'top': offsetY-size/2, 'transition': 'none' } );
 
-            // サイズを指定（縦横の大きい値）
-            var circleRatio      = 2.8;
-            var animateTo        = { 'width': Math.max( width, height )*circleRatio };
-            animateTo.height     = animateTo.width;
-            animateTo.left       = offsetX-animateTo.width/2;
-            animateTo.top        = offsetY-animateTo.height/2;
+            var animateTo        = {};
+            animateTo.transform  = 'scale3d( ' + circleRatio + ', ' + circleRatio + ', 1 )';
             animateTo.transition = ( this._v_duration/1000 )+'s ease-out';
 
             // アニメーション開始
@@ -155,7 +155,7 @@
             clearTimeout( this._timer );
             this._timer = setTimeout( function() {
                 that.$rippleWrap.css( { 'opacity': 1, 'transition': 'none' } );
-                that.$rippleAnimate.css( { 'width': 0, 'height': 0, 'transition': 'none' } );
+                that.$rippleAnimate.css( { 'transform': 'scale3d( 0, 0, 1 )', 'transition': 'none' } );
             }, this._v_duration );
         }
     };
