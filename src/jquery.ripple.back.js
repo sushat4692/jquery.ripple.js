@@ -9,16 +9,11 @@
 ( function( $, U ) {
     // border-radiusが使えるか？
     $.support.borderRadius = false;
-    // transitionが使えるか？
-    $.support.transition = false;
     $( function() {
         $.each( [ 'borderRadius', 'BorderRadius', 'MozBorderRadius', 'WebkitBorderRadius', 'OBorderRadius', 'KhtmlBorderRadius' ], function( i, v ) {
             if( document.body.style[v] !== undefined ) $.support.borderRadius = true;
             return (! $.support.borderRadius );
         } );
-
-        var el = $("<div>");
-        $.support.transition = typeof el.css("transitionProperty") === "string";
     } );
 
     $.extend( {
@@ -28,18 +23,17 @@
             $textSpan: $('<span>').css( { position: 'relative', 'z-index': 2 } ),
             // アニメーション用のDOM
             $rippleWrap: $('<span>', { 'class': 'rippleWrap' } ).css( { position: 'absolute', 'z-index': 1, 'left': 0, 'top': 0, 'overflow': 'hidden' } ).append(
-                            $('<span>', { 'class': 'rippleAnimate' } ).css( { position: 'absolute', 'left': 0, 'top': 0, 'width': 0, 'height': 0, 'border-radius': '50%' } )
+                            $('<span>', { 'class': 'rippleAnimate' } ).css( { position: 'absolute', 'left': 0, 'top': 0, 'border-radius': '50%' } )
                          ),
             // jquery.rippleが利用できるか？
             is: function() {
-                return $.support.borderRadius && $.support.transition;
+                return $.support.borderRadius;
             },
             // coreクラス
             core: function( target, param ) {
                 this.$target   = target;
                 this._v_duration = 400;
                 this._h_duration = 400;
-                this._timer      = null;
 
                 // paramに値があれば設定変更
                 if( param !== U && Object.prototype.hasOwnProperty.call( param, 'v_duration' ) ) {
@@ -84,10 +78,6 @@
             this.$rippleWrap    = this.$target.find( '.rippleWrap' );
             this.$rippleAnimate = this.$target.find( '.rippleAnimate' );
 
-            // マスクに関係するスタイルを反映する
-            // border-radius
-            this.$rippleWrap.css( 'border-radius', this.$target.css( 'border-radius' ) );
-
             // 色を指定
             this.$target.find( '.rippleAnimate' ).css( 'background-color', this.$target.attr( 'data-color' ) );
 
@@ -118,45 +108,38 @@
 
         // アニメーション開始
         view: function( e ) {
-            // タイマーは切っておく
-            clearTimeout( this._timer );
-
             // マスク要素のサイズを再取得（変わる可能性も考慮して）
             var width  = this.$target.outerWidth();
             var height = this.$target.outerHeight();
-            this.$rippleWrap.stop( true, false ).width( width ).height( height ).css( { 'opacity': 1, 'transition': 'none' } );
+            this.$rippleWrap.stop( true, false ).width( width ).height( height ).css( 'opacity', 1 );
+
+            // マスクに関係するスタイルを反映する
+            // border-radius
+            this.$rippleWrap.css( 'border-radius', this.$target.css( 'border-radius' ) );
 
             // マウスボタンの位置を取得
             // offsetX, offsetYがおかしいのでpageX, pageYから計算する
             var offsetX = e.pageX - this.$target.offset().left;
             var offsetY = e.pageY - this.$target.offset().top;
-            this.$rippleAnimate.css( { 'width': 0, 'height': 0, 'left': offsetX, 'top': offsetY, 'transition': 'none' } );
+            this.$rippleAnimate.css( { 'left': offsetX, 'top': offsetY } );
 
             // サイズを指定（縦横の大きい値）
-            var circleRatio      = 2.8;
-            var animateTo        = { 'width': Math.max( width, height )*circleRatio };
-            animateTo.height     = animateTo.width;
-            animateTo.left       = offsetX-animateTo.width/2;
-            animateTo.top        = offsetY-animateTo.height/2;
-            animateTo.transition = ( this._v_duration/1000 )+'s ease-out';
+            var circleRatio  = 2.8;
+            var animateTo    = { 'width': Math.max( width, height )*circleRatio };
+            animateTo.height = animateTo.width;
+            animateTo.left   = offsetX-animateTo.width/2;
+            animateTo.top    = offsetY-animateTo.height/2;
 
             // アニメーション開始
             this.$rippleAnimate.show()
-                .css( animateTo );
+                .width( 0 ).height( 0 )
+                .stop( true, false ).animate( animateTo, { 'duration': this._v_duration } );
         },
 
         // アニメーション終了
         hidden: function( e ) {
-            var that = this;
             // Wrapの透明度を下げて隠していく
-            this.$rippleWrap.stop( true, false ).css( { 'opacity': 0, 'transition': 'opacity '+( this._h_duration/1000 )+'s ease-out' } );
-
-            // アニメーション終了タイミングでサイズ変更
-            clearTimeout( this._timer );
-            this._timer = setTimeout( function() {
-                that.$rippleWrap.css( { 'opacity': 1, 'transition': 'none' } );
-                that.$rippleAnimate.css( { 'width': 0, 'height': 0, 'transition': 'none' } );
-            }, this._v_duration );
+            this.$rippleWrap.stop( true, false ).animate( { 'opacity': 0 }, { 'duration': this._h_duration } );
         }
     };
 
@@ -164,7 +147,7 @@
         // jquery.ripple
         ripple: function( opt ) {
             // 必要条件に満たさなければ終了
-            // border-radiusとtransitionが使えればたぶん動く
+            // border-radiusが使えればたぶん動く
             if(! $.ripple.is() ) {
                 return $(this);
             }
