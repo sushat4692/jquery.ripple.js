@@ -63,6 +63,13 @@
         init: function() {
             var that = this;
 
+            // position staticだったらrelativeにしておく
+            if( this.$target.css( 'position' ) === 'static' ) {
+                this.$target.css( 'position', 'relative' );
+            }
+            // スマホ端末のハイライトを切る
+            this.$target.css( '-webkit-tap-highlight-color', 'rgba( 0, 0, 0, 0 )' );
+
             // 必要DOMを追加
             this.$target.wrapInner( $.ripple.$textSpan );
             this.$target.append( $.ripple.$rippleWrap.clone() );
@@ -75,12 +82,24 @@
             this.$target.find( '.rippleAnimate' ).css( 'background-color', this.$target.attr( 'data-color' ) );
 
             // イベントを登録
-            this.$target.bind( 'mousedown.ripple', function( e ) {
-                that.view( e );
-            } );
-            this.$target.bind( 'mouseup.ripple mouseleave.ripple', function( e ) {
-                that.hidden( e );
-            } );
+            if( ('ontouchstart' in window) ) {
+                this.$target.bind( 'touchstart.ripple', function( e ) {
+                    that.view( e.originalEvent.touches[0] );
+                } );
+                this.$target.bind( 'touchend.ripple', function( e ) {
+                    that.hidden( e.originalEvent.touches[0] );
+                } );
+                this.$target.bind( 'mouseleave.ripple', function( e ) {
+                    that.hidden( e );
+                } );
+            } else {
+                this.$target.bind( 'mousedown.ripple', function( e ) {
+                    that.view( e );
+                } );
+                this.$target.bind( 'mouseup.ripple mouseleave.ripple', function( e ) {
+                    that.hidden( e );
+                } );
+            }
         },
 
         // イベント廃止
@@ -132,9 +151,6 @@
             if(! $.ripple.is() ) {
                 return $(this);
             }
-
-            // 元のDOMにはrelativeを掛ける
-            $(this).css( 'position', 'relative' );
 
             // 対象DOMに対してイベントを登録する
             $(this).each( function() {
