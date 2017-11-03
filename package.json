@@ -1,0 +1,20 @@
+{
+  "name": "jquery.ripple.js",
+  "version": "0.1.0",
+  "description": "Ripple Animation jQuery-Library",
+  "main": "./src/script.ts",
+  "scripts": {
+    "build:ts": "tsc -p ./",
+    "watch:ts": "tsc -p ./ -w",
+    "uglifyjs": "uglifyjs --compress --mangle --output dist/jquery.ripple.min.js -- dist/jquery.ripple.js",
+    "copy": "cp -f ./dist/jquery.ripple.js ./docs/js/jquery.ripple.js && cp -f ./dist/jquery.ripple.min.js ./docs/js/jquery.ripple.min.js",
+    "build": "npm run build:ts && npm run uglifyjs && npm run copy"
+  },
+  "author": "SUSH",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/jquery": "^3.2.16",
+    "typescript": "^2.6.1",
+    "uglify-js": "^3.1.6"
+  }
+}

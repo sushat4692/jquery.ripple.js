@@ -1,0 +1,19 @@
+// tsconfig.json
+{
+    "compilerOptions": {
+        "module": "amd",
+        "moduleResolution": "node",
+        "target": "es5",
+        "outFile": "dist/jquery.ripple.js",
+        "lib": [
+            "dom",
+            "es5",
+            "es2015",
+            "es2015.iterable",
+            "es2015.promise"
+        ]
+    },
+    "files": [
+        "src/script.ts"
+    ]
+}
