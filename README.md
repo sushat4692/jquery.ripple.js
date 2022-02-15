@@ -13,4 +13,4 @@ $( '.ripple' ).ripple( {
 
 ## Demo
 
-[Hear](https://sus-happy.github.io/jquery.ripple.js/)
+[Hear](https://sushat4692.github.io/jquery.ripple.js/)
